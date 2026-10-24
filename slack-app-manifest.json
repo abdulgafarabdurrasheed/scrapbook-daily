@@ -1,0 +1,46 @@
+{
+  "display_information": {
+    "name": "Scrapbook Daily",
+    "description": "Draft an evidence-backed daily Scrapbook post for review",
+    "background_color": "#1d3d2b"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Scrapbook Daily",
+      "always_online": false
+    },
+    "slash_commands": [
+      {
+        "command": "/scrapbook-draft",
+        "description": "Build a daily Scrapbook draft from your activity",
+        "usage_hint": "[YYYY-MM-DD]",
+        "should_escape": false,
+        "url": "https://example.com/slack/commands"
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "commands",
+        "chat:write",
+        "im:write",
+        "channels:history",
+        "files:read"
+      ],
+      "user": [
+        "chat:write",
+        "files:write"
+      ]
+    }
+  },
+  "settings": {
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://example.com/slack/interactions"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}
