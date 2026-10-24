@@ -13,7 +13,7 @@ This is a single-user MVP. It only processes messages written by the configured 
 3. In OAuth & Permissions, configure bot scopes `commands`, `chat:write`, `im:write`, `channels:history`, and `files:read`. Enable Interactivity and set its request URL to `https://YOUR-HOST/slack/interactions`. `views.open` does not need its own scope.
 4. Configure a user OAuth token for the account that owns the Scrapbook posts, with user scopes `chat:write` and `files:write`. The user must already be a member of `#scrapbook`. Publishing is performed with this user token so Scrapbook sees the actual author.
 5. Invite the bot to each public channel you choose to include and set their IDs in `SLACK_CHANNEL_IDS`. Avoid channels whose messages you do not want sent to your AI provider.
-6. Copy `.env.example` to `.env`, fill in your values, and keep `.env` private. `AI_API_KEYS` accepts comma-separated keys and rotates one key per draft request. It does not retry a failed or rate-limited request with another key.
+6. Copy `.env.example` to `.env`, fill in your values, and keep `.env` private. On startup, the app checks that the user token belongs to `OWNER_SLACK_USER_ID` and the same workspace as the bot token. `AI_API_KEYS` accepts comma-separated keys and rotates one key per draft request. It does not retry a failed or rate-limited request with another key.
 7. Run `cargo run --release`. Expose the server over HTTPS for Slack using your preferred tunnel or host.
 8. In Slack, run `/scrapbook-draft` or `/scrapbook-draft 2026-10-24`.
 

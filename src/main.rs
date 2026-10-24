@@ -43,6 +43,8 @@ async fn main() -> Result<()> {
         ai_key_rotation: Arc::new(AtomicUsize::new(0)),
     };
 
+    slack::verify_tokens(&state).await?;
+
     let app = Router::new()
         .route("/health", get(web::health))
         .route("/slack/commands", post(web::slash_command))

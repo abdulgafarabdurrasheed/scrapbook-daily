@@ -3,6 +3,41 @@ use serde_json::{Value, json};
 
 use crate::{app::AppState, models::Draft, store};
 
+pub async fn verify_tokens(state: &AppState) -> Result<()> {
+    let bot = api(state, &state.config.slack_bot_token, "auth.test", json!({})).await?;
+    let user = api(
+        state,
+        &state.config.slack_user_token,
+        "auth.test",
+        json!({}),
+    )
+    .await?;
+    let configured_user = user
+        .get("user_id")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    if configured_user != state.config.owner_slack_user_id {
+        return Err(anyhow!(
+            "SLACK_USER_TOKEN belongs to {configured_user}, but OWNER_SLACK_USER_ID is {}",
+            state.config.owner_slack_user_id
+        ));
+    }
+    let bot_team = bot
+        .get("team_id")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    let user_team = user
+        .get("team_id")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    if bot_team.is_empty() || bot_team != user_team {
+        return Err(anyhow!(
+            "SLACK_BOT_TOKEN and SLACK_USER_TOKEN must belong to the same workspace"
+        ));
+    }
+    Ok(())
+}
+
 async fn api(state: &AppState, token: &str, method: &str, payload: Value) -> Result<Value> {
     let response = state
         .client
